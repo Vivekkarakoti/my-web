@@ -1,15 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Section from '../components/Section';
 import Button from '../components/ui/Button';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Contact: React.FC = () => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate('/thank-you');
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('https://formspree.io/f/mjgekavo', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        form.reset();
+        // Navigate to thank you page after short delay
+        setTimeout(() => {
+          navigate('/thank-you');
+        }, 1500);
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -53,22 +84,71 @@ const Contact: React.FC = () => {
             <div className="lg:col-span-2">
                 <div className="bg-brand-panel rounded-2xl p-8 md:p-12 border border-neutral-800 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                     <h2 className="text-2xl font-serif font-bold mb-8 border-l-4 border-brand-purple pl-4">Send us a Message</h2>
+                    
+                    {/* Success Message */}
+                    {submitStatus === 'success' && (
+                        <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center gap-3 text-green-400">
+                            <CheckCircle size={20} />
+                            <span>Thank you! Your message has been sent successfully. We'll get back to you soon.</span>
+                        </div>
+                    )}
+
+                    {/* Error Message */}
+                    {submitStatus === 'error' && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-3 text-red-400">
+                            <AlertCircle size={20} />
+                            <span>Sorry, there was an error sending your message. Please try again or contact us directly.</span>
+                        </div>
+                    )}
+
                     <form className="space-y-6" onSubmit={handleFormSubmit}>
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label htmlFor="name" className="text-sm font-medium text-neutral-300">Name</label>
-                                <input type="text" id="name" className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all" required />
+                                <label htmlFor="name" className="text-sm font-medium text-neutral-300">Name *</label>
+                                <input 
+                                  type="text" 
+                                  id="name" 
+                                  name="name"
+                                  className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all" 
+                                  required 
+                                  disabled={isSubmitting}
+                                />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="phone" className="text-sm font-medium text-neutral-300">Phone Number</label>
-                                <input type="tel" id="phone" className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all" required />
+                                <label htmlFor="phone" className="text-sm font-medium text-neutral-300">Phone Number *</label>
+                                <input 
+                                  type="tel" 
+                                  id="phone" 
+                                  name="phone"
+                                  className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all" 
+                                  required 
+                                  disabled={isSubmitting}
+                                />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="service" className="text-sm font-medium text-neutral-300">Service Required</label>
+                            <label htmlFor="email" className="text-sm font-medium text-neutral-300">Email Address *</label>
+                            <input 
+                              type="email" 
+                              id="email" 
+                              name="email"
+                              className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all" 
+                              required 
+                              disabled={isSubmitting}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="service" className="text-sm font-medium text-neutral-300">Service Required *</label>
                             <div className="relative">
-                                <select id="service" className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all appearance-none" required>
+                                <select 
+                                  id="service" 
+                                  name="service"
+                                  className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all appearance-none" 
+                                  required
+                                  disabled={isSubmitting}
+                                >
                                     <option value="">Select a service</option>
                                     <option value="kitchen">Modular Kitchen</option>
                                     <option value="full-interior">Full Interior</option>
@@ -83,15 +163,35 @@ const Contact: React.FC = () => {
 
                         <div className="space-y-2">
                             <label htmlFor="budget" className="text-sm font-medium text-neutral-300">Estimated Budget (Optional)</label>
-                            <input type="text" id="budget" placeholder="e.g., Rs. 5,00,000" className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all" />
+                            <input 
+                              type="text" 
+                              id="budget" 
+                              name="budget"
+                              placeholder="e.g., Rs. 5,00,000" 
+                              className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all"
+                              disabled={isSubmitting}
+                            />
                         </div>
 
                         <div className="space-y-2">
                             <label htmlFor="message" className="text-sm font-medium text-neutral-300">Message (Optional)</label>
-                            <textarea id="message" rows={4} className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all"></textarea>
+                            <textarea 
+                              id="message" 
+                              name="message"
+                              rows={4} 
+                              className="w-full px-4 py-3 rounded-lg bg-brand-black border border-neutral-700 text-white focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none transition-all"
+                              disabled={isSubmitting}
+                            ></textarea>
                         </div>
 
-                        <Button type="submit" fullWidth className="mt-4">Start Your Journey</Button>
+                        <Button 
+                          type="submit" 
+                          fullWidth 
+                          className="mt-4"
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? 'Sending...' : 'Start Your Journey'}
+                        </Button>
                     </form>
                 </div>
             </div>
