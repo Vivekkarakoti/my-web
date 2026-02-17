@@ -17,7 +17,7 @@ const Services: React.FC = () => {
         "Furniture and décor curation",
         "Project management and execution"
       ],
-      img: "https://picsum.photos/seed/fullinterior/800/600",
+      img: "./interiors.jpg",
       linkText: "Get Estimate"
     },
     {
@@ -31,7 +31,7 @@ const Services: React.FC = () => {
         "Modern appliance integration",
         "Customized layouts for your space"
       ],
-      img: "https://picsum.photos/seed/modularkitchen/800/600",
+      img: "./kitchen.jpg",
       linkText: "Request Kitchen Estimate"
     },
     {
@@ -45,7 +45,7 @@ const Services: React.FC = () => {
         "Color scheme and texture coordination",
         "Space optimization and flow"
       ],
-      img: "https://picsum.photos/seed/livingroom/800/600",
+      img: "./living-room.jpg",
       linkText: "Get Estimate"
     },
     {
@@ -59,7 +59,7 @@ const Services: React.FC = () => {
         "Heritage preservation where needed",
         "Complete project documentation"
       ],
-      img: "https://picsum.photos/seed/renovation/800/600",
+      img: "./renovation.jpg",
       linkText: "Start Your Renovation"
     },
     {
@@ -73,7 +73,7 @@ const Services: React.FC = () => {
         "Budget optimization suggestions",
         "Transparent pricing — no hidden costs"
       ],
-      img: "https://picsum.photos/seed/estimation/800/600",
+      img: "./kitchen-modern.jpg",
       linkText: "Get Your Estimate Now"
     }
   ];
@@ -84,7 +84,7 @@ const Services: React.FC = () => {
       <div className="relative h-[50vh] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://picsum.photos/seed/serviceshero/1920/1080')" }}
+          style={{ backgroundImage: "url('./home.jpg')" }}
         >
            <div className="absolute inset-0 bg-black/70"></div>
         </div>
@@ -164,7 +164,7 @@ const Services: React.FC = () => {
                      </ul>
                 </div>
                 <div className="h-full min-h-[400px]">
-                    <img src="https://picsum.photos/seed/whychoose/600/800" alt="Team at Work" className="w-full h-full object-cover rounded-lg shadow-lg" />
+                    <img src="./interiors-1.jpg" alt="Team at Work" className="w-full h-full object-cover rounded-lg shadow-lg" />
                 </div>
             </div>
         </div>
