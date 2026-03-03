@@ -37,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="text-xl font-bold font-serif text-white">V</span>
               </div>
             )}
-            <span className="text-2xl font-serif font-bold tracking-wide group-hover:text-brand-purple-light transition-colors">The Viraj</span>
+            <span className="text-2xl font-serif font-bold tracking-wide group-hover:text-brand-purple-light transition-colors">Interior Firm</span>
           </Link>
 
           {/* Desktop Nav */}
